@@ -1,5 +1,6 @@
 package com.sparta.paymentsystem.global.config;
 
+import com.sparta.paymentsystem.global.error.ErrorCode;
 import com.sparta.paymentsystem.global.filter.JwtAuthFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.springframework.boot.security.autoconfigure.web.servlet.PathRequest.toStaticResources;
 
@@ -22,6 +24,7 @@ import static org.springframework.boot.security.autoconfigure.web.servlet.PathRe
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
@@ -35,7 +38,9 @@ public class SecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"code\":\"AUTH_001\",\"message\":\"인증이 필요합니다\"}");
+                            response.getWriter().write(
+                                    objectMapper.writeValueAsString(ErrorCode.UNAUTHORIZED)
+                            );
                         })
                 )
                 .authorizeHttpRequests(auth -> auth
