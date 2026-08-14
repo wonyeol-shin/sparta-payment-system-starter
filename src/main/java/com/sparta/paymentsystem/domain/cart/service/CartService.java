@@ -47,6 +47,15 @@ public class CartService {
         item.changeQuantity(quantity);
     }
 
+    public List<CartItem> findCartEntities(Long memberId) {
+        return cartItemRepository.findByMemberId(memberId);
+    }
+
+    public List<CartItem> findCartEntitiesByIds(
+            Long memberId, List<Long> cartItemIds ) {
+        return cartItemRepository.findByIdInAndMember_IdWithProduct(cartItemIds, memberId);
+    }
+
     @Transactional
     public void removeItem(Long memberId, Long itemId) {
         int deleted = cartItemRepository.deleteByIdAndMember_Id(itemId, memberId);
