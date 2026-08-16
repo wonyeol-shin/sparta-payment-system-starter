@@ -30,4 +30,15 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     List<CartItem> findByIdInAndMember_IdWithProduct(
             @Param("ids") List<Long> ids, @Param("memberId") Long memberId );
 
+    // 주문 생성 완료 직후 "주문한 장바구니 아이템을" 일괄 생성
+    // member.id 조건 : cartItemId를 남의것으로 보내는 경우를 방지하기 위한 소유권 검사
+    // 반환은 int로 하는데 몇 개를 지웠는지 알려줌
+    // modifying은 1차캐시를 지워주는 역할을 하여 삭제를 하고나서 혹시나 조회가 되는 상황을 방지한다.
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+    DELETE FROM CartItem c
+    WHERE c.product.id IN :ids AND c.member.id = :memberId
+""")
+    int deleteAllByIdInAndMemberId(@Param("ids") List<Long> ids , @Param("memberId") Long memberId);
+
 }
