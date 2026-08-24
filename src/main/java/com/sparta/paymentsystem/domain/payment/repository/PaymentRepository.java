@@ -29,4 +29,8 @@ public interface PaymentRepository extends JpaRepository<Payment,Long> {
 """)
     List<Object[]> findIdsByOrderIds(@Param("orderIds") List<Long> orderIds);
 
+    // 주문 단건 상세 조회 : orderId만으로 조회
+    @Query("SELECT p FROM Payment p JOIN FETCH p.order WHERE p.order.id = :orderId")
+    Optional<Payment> findByOrderIdWithOrder(@Param("orderId") Long orderId);
+
 }

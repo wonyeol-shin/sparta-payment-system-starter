@@ -57,4 +57,11 @@ public class Product extends BaseTimeEntity {
 
     }
 
+    public void restoreStock(int quantity) {
+        if (quantity <= 0) {
+            throw new BusinessException(ErrorCode.INVALID_QUANTITY);
+        }
+        this.stock += quantity;
+    }
+
 }
