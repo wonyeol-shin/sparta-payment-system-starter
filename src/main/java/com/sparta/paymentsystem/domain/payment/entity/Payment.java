@@ -45,6 +45,10 @@ public class Payment extends BaseTimeEntity {
         this.portonePaymentId = generatePortonePaymentId();
     }
 
+    public void markAsCancelled() {
+        changeStatus(PaymentStatus.CANCELLED);
+    }
+
     private static String generatePortonePaymentId() {
         return "pay_" + UUID.randomUUID();
     }
