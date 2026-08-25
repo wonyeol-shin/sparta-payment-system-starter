@@ -75,4 +75,10 @@ public class PaymentService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.PAYMENT_NOT_FOUND));
     }
 
+    // 웹훅에서 수신한 PortOne 쪽 paymentId, 즉 portonePaymentId 기반으로 Payment 조회
+    public Payment findByPortonePaymentId(String portonePaymentId) {
+        return paymentRepository.findByPortonePaymentId(portonePaymentId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PAYMENT_NOT_FOUND));
+    }
+
 }
